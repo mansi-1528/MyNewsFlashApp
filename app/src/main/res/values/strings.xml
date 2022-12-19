@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">NewsFlash</string>
+    <string name="search_news_by_name">search news by name</string>
+</resources>
