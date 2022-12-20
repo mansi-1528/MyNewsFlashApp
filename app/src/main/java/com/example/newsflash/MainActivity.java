@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements NetworkingService
     int count = -1;
     ArrayList<Bitmap> bitmapList = new ArrayList<>();
     ArrayList<News> finalList = new ArrayList<>();
-    String queryStr = "";
+    //String queryStr = "";
     int index = -1;
     ProgressBar bar;
     SearchView searchView;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements NetworkingService
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState != null) {
-            queryStr = savedInstanceState.getString("Str");
+           // queryStr = savedInstanceState.getString("Str");
             finalList = savedInstanceState.getParcelableArrayList("list");
         }
         ((MyApp) getApplication()).dbManager.listener = this;
@@ -53,10 +53,17 @@ public class MainActivity extends AppCompatActivity implements NetworkingService
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        ((MyApp) getApplication()).dbManager.listener = this;
+
+    }
+
+    @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("list", finalList);
-        outState.putString("Str", queryStr);
+      //  outState.putString("Str", queryStr);
     }
 
     @Override
@@ -77,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements NetworkingService
             @Override
             public boolean onQueryTextChange(String newText) {
                 //  Log.d("Donation app change",newText);
-                queryStr = newText;
+               // queryStr = newText;
                 finalList.clear();
                 bitmapList.clear();
                 if (newText.length() >= 3) {
@@ -152,6 +159,16 @@ public class MainActivity extends AppCompatActivity implements NetworkingService
         ((MyApp) getApplication()).dbManager.getAllNewsData();
         ((MyApp) getApplication()).selectedNews = obj;
 
+    }
+
+    @Override
+    public void onShareClicked(int post) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, finalList.get(post).getUrl());
+        shareIntent.setType("text/html");
+        shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(shareIntent, null));
     }
 
 

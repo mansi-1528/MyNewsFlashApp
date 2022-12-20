@@ -26,7 +26,7 @@ public class FavouritesActivity extends AppCompatActivity implements DBManager.D
         recyclerView = findViewById(R.id.favourite_recycler);
         adapter = new NewsAdapter(this, newsList);
 
-        //this.setTitle("");
+        this.setTitle("Favourites...");
         adapter.listener = this;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -34,7 +34,12 @@ public class FavouritesActivity extends AppCompatActivity implements DBManager.D
         ((MyApp)getApplication()).dbManager.getAllNewsData();
 
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((MyApp) getApplication()).dbManager.listener = this;
 
+    }
     @Override
     public void insertNewsCompleted() {
         //
@@ -58,5 +63,14 @@ public class FavouritesActivity extends AppCompatActivity implements DBManager.D
         intent.putExtra("isSaved", true);
 
         startActivity(intent);
+    }
+    @Override
+    public void onShareClicked(int post) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, newsList.get(post).getUrl());
+        shareIntent.setType("text/html");
+        shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(shareIntent, null));
     }
 }

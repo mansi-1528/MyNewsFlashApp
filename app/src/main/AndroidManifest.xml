@@ -44,8 +44,8 @@
             android:exported="false"
             android:screenOrientation="fullSensor">
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CommonNewsActivity" />
+                android:name="android.app.lib_name"
+                android:value="" />
         </activity>
         <activity
             android:name=".SplashActivity"

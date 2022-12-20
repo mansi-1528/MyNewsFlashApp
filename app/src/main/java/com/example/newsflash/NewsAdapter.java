@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ public class NewsAdapter extends
 
     interface ItemListener{
         void onClicked(int post);
+        void onShareClicked(int post);
     }
 
     Context context;
@@ -59,17 +61,27 @@ public class NewsAdapter extends
     {
         TextView newsTitle;
         ImageView imageView;
+        ImageButton shareButton;
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
             newsTitle =  itemView.findViewById(R.id.news_title);
             imageView=itemView.findViewById(R.id.news_image);
+            shareButton=itemView.findViewById(R.id.news_share_btn);
             itemView.setOnClickListener(this);
+            shareButton.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            listener.onClicked( getAdapterPosition());
+            switch (view.getId()){
+                case R.id.news_share_btn:
+                    listener.onShareClicked(getAdapterPosition());
+                    break;
+                default:
+                    listener.onClicked( getAdapterPosition());
+
+            }
 
         }
     }

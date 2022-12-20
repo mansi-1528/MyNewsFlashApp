@@ -18,10 +18,15 @@
     <color name="blue1">#182FAF</color>
 
     <color name="btn1">#21618C</color>
+    <color name="btn11">#173F5A</color>
     <color name="btn2">#117864</color>
+    <color name="btn21">#0C5547</color>
     <color name="btn3">#9C640C</color>
+    <color name="btn31">#80520B</color>
     <color name="btn4">#566573</color>
+    <color name="btn41">#3C4751</color>
     <color name="btn5">#7D3C98</color>
+    <color name="btn51">#57286A</color>
 
 
 </resources>

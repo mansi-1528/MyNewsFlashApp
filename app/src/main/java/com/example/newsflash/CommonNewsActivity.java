@@ -47,6 +47,13 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        ((MyApp) getApplication()).dbManager.listener = this;
+
+    }
+
+    @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("list", finalList);
@@ -139,6 +146,15 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
         News obj = finalList.get(post);
         ((MyApp) getApplication()).dbManager.getAllNewsData();
         ((MyApp) getApplication()).selectedNews = obj;
+    }
+    @Override
+    public void onShareClicked(int post) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, finalList.get(post).getUrl());
+        shareIntent.setType("text/html");
+        shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(shareIntent, null));
     }
 
     @Override

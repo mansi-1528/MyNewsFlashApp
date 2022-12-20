@@ -126,6 +126,7 @@ public class DetailNewsActivity extends AppCompatActivity implements DBManager.D
     @Override
     public void gettingNewsCompleted(News[] list) {
         Toast.makeText(this, "done", Toast.LENGTH_SHORT).show();
+       // finish();
         isSaved = true;
     }
 }

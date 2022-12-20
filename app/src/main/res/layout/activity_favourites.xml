@@ -9,5 +9,6 @@
     android:id="@+id/favourite_recycler"
     android:layout_width="match_parent"
     tools:listitem="@layout/news_row"
+    android:background="@color/grey"
     android:layout_height="match_parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
