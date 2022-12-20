@@ -44,6 +44,13 @@ public class NetworkingService {
         String str = searchURL1 + query + searchURL2;
         connectToNews(str);
     }
+    void getNewsByCategory(String category) {
+        //String str = cityURLString + query;
+        String cUrl1="https://bing-news-search1.p.rapidapi.com/news?category=";
+        String cUrl2="&safeSearch=Off&textFormat=Raw";
+        String str = cUrl1 + category + cUrl2;
+        connectToNews(str);
+    }
     // void getWeatherInSelectedCity(City c){
     //    String fullString = weatherURL1 + c.city +","+c.country + weatherURL2;
     //    connect(fullString);
@@ -59,7 +66,7 @@ public class NetworkingService {
                     int value = 0;
                     URL url = new URL(urlString);
                     urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setRequestProperty("X-RapidAPI-Key", SDK);
+                    urlConnection.setRequestProperty("X-BingApis-SDK", SDK);
                     urlConnection.setRequestProperty("X-RapidAPI-Key", KEY);
                     urlConnection.setRequestProperty("X-RapidAPI-Host", HOST_NEWS);
                     InputStream in = new BufferedInputStream(urlConnection.getInputStream());

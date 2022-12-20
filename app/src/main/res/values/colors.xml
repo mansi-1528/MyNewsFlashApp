@@ -12,8 +12,16 @@
 
     <color name="red_500">#A81C1C</color>
     <color name="green1">#66930C</color>
+    <color name="green3">#87BF1A</color>
     <color name="red_700">#771111</color>
     <color name="green2">#37520B</color>
     <color name="blue1">#182FAF</color>
+
+    <color name="btn1">#21618C</color>
+    <color name="btn2">#117864</color>
+    <color name="btn3">#9C640C</color>
+    <color name="btn4">#566573</color>
+    <color name="btn5">#7D3C98</color>
+
 
 </resources>

@@ -1,6 +1,7 @@
 package com.example.newsflash;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +40,12 @@ public class NewsAdapter extends
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
         holder.newsTitle.setText(list.get(position).name);
+        if(list.get(position).bytes!=null){
+            BitmapConvertor convertor=new BitmapConvertor();
+            Bitmap bitmap=convertor.byteArrayToBitmap(list.get(position).bytes);
+            holder.imageView.setImageBitmap(bitmap);
+        }
 
-        holder.imageView.setImageBitmap(list.get(position).getPhoto_bitmap());
     }
 
     @Override

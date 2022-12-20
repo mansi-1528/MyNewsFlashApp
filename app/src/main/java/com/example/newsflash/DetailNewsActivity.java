@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,24 +16,40 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class DetailNewsActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class DetailNewsActivity extends AppCompatActivity implements DBManager.DataBaseListener {
     News object = new News();
     TextView title, desc;
     ImageView imageView;
     Button readMore;
+    Boolean isSaved = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_news);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            isSaved = extras.getBoolean("isSaved");
+        }
         object = ((MyApp) getApplication()).selectedNews;
         title = findViewById(R.id.select_title);
+
+        ((MyApp) getApplication()).dbManager.listener = this;
+        ((MyApp) getApplication()).dbManager.getDB(this);
+
         desc = findViewById(R.id.select_desc);
         imageView = findViewById(R.id.select_img);
-        readMore=findViewById(R.id.select_btn_readmore);
+        readMore = findViewById(R.id.select_btn_readmore);
         title.setText(object.name);
         desc.setText(object.description);
-        imageView.setImageBitmap(object.getPhoto_bitmap());
+        BitmapConvertor convertor = new BitmapConvertor();
+        Bitmap bitmap = convertor.byteArrayToBitmap(object.bytes);
+        imageView.setImageBitmap(bitmap);
+
+
+
         readMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,8 +73,16 @@ public class DetailNewsActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.save:
-                Toast.makeText(this, "save", Toast.LENGTH_SHORT).show();
-                item.setIcon(R.drawable.ic_baseline_bookmark_24);
+                if (isSaved) {
+                    Toast.makeText(this, "Item already added to database..", Toast.LENGTH_SHORT).show();
+                } else {
+                    //Toast.makeText(this, "save", Toast.LENGTH_SHORT).show();
+                    item.setIcon(R.drawable.ic_baseline_bookmark_24);
+                    News newObj = new News(object.name, object.url, object.description, object.content_url, object.bytes);
+                    ((MyApp) getApplication()).dbManager.insertNewsAsync(newObj);
+
+                }
+
                 return true;
 
             case R.id.share:
@@ -75,9 +100,10 @@ public class DetailNewsActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-       /* if ("mIsSaved") {
+        if (isSaved) {
             //in production you'd probably be better off keeping a reference to the item
             menu.findItem(R.id.save)
                     .setIcon(R.drawable.ic_baseline_bookmark_24)
@@ -86,8 +112,20 @@ public class DetailNewsActivity extends AppCompatActivity {
             menu.findItem(R.id.save)
                     .setIcon(R.drawable.ic_baseline_bookmark_border_24)
                     .setTitle("save");
-        }*/
+        }
         return super.onPrepareOptionsMenu(menu);
 
+    }
+
+    @Override
+    public void insertNewsCompleted() {
+        ((MyApp) getApplication()).dbManager.getAllNewsData();
+
+    }
+
+    @Override
+    public void gettingNewsCompleted(News[] list) {
+        Toast.makeText(this, "done", Toast.LENGTH_SHORT).show();
+        isSaved = true;
     }
 }

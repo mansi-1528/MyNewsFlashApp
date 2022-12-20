@@ -1,4 +1,4 @@
-package com.example.ywca_weatherappf22;
+package com.example.newsflash;
 
 import android.content.Context;
 import android.os.Handler;
@@ -9,49 +9,49 @@ import androidx.room.Room;
 public class DBManager {
 
     interface DataBaseListener{
-        void insertingCityCompleted();
-        void gettingCitiesCompleted(City[] list);
+        void insertNewsCompleted();
+        void gettingNewsCompleted(News[] list);
     }
 
     DataBaseListener listener;
 
-    CitiesDatabase cityDB;
+    NewsDatabase cityDB;
     Handler dbHandler = new Handler(Looper.getMainLooper());
 
-    CitiesDatabase getDB(Context context){
+    NewsDatabase getDB(Context context){
         if (cityDB == null)
-            cityDB = Room.databaseBuilder(context,CitiesDatabase.class,"city_db").build();
+            cityDB = Room.databaseBuilder(context,NewsDatabase.class,"city_db").build();
 
         return cityDB;
     }
 
-    void insertNewCityAsync(City t){
+    void insertNewsAsync(News t){
 
         MyApp.executorService.execute(new Runnable() {
             @Override
             public void run() {
-                cityDB.getDao().addNewFavCity(t);
+                cityDB.getDao().addNewsToReadLater(t);
                 dbHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         // notify main thread
-                        listener.insertingCityCompleted();
+                        listener.insertNewsCompleted();
                     }
                 });
             }
         });
     }
 
-    void getAllCities(){
+    void getAllNewsData(){
         MyApp.executorService.execute(new Runnable() {
             @Override
             public void run() {
-                City[] list = cityDB.getDao().getAllCities();
+                News[] list = cityDB.getDao().getAllNews();
                 dbHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         // notify main thread
-                        listener.gettingCitiesCompleted(list);
+                        listener.gettingNewsCompleted(list);
                     }
                 });
             }

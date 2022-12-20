@@ -10,6 +10,6 @@ public class MyApp extends Application {
 
    static ExecutorService executorService = Executors.newFixedThreadPool(4);
     NetworkingService networkingService = new NetworkingService();
-  //  DBManager dbManager = new DBManager();
+    DBManager dbManager = new DBManager();
     News selectedNews=new News();
 }

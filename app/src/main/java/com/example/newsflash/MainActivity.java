@@ -1,5 +1,6 @@
 package com.example.newsflash;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -15,32 +16,47 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements NetworkingService.NetworkingListener, NewsAdapter.ItemListener {
+public class MainActivity extends AppCompatActivity implements NetworkingService.NetworkingListener, NewsAdapter.ItemListener, DBManager.DataBaseListener {
     RecyclerView recyclerView;
     NewsAdapter adapter;
-    int count=-1;
+    int count = -1;
     ArrayList<Bitmap> bitmapList = new ArrayList<>();
-    ArrayList<News> mylist = new ArrayList<>();
     ArrayList<News> finalList = new ArrayList<>();
+    String queryStr = "";
+    int index = -1;
+    ProgressBar bar;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        if (savedInstanceState != null) {
+            queryStr = savedInstanceState.getString("Str");
+            finalList = savedInstanceState.getParcelableArrayList("list");
+        }
+        ((MyApp) getApplication()).dbManager.listener = this;
+        ((MyApp) getApplication()).dbManager.getDB(this);
         ((MyApp) getApplication()).networkingService.listener = this;
         recyclerView = findViewById(R.id.news_recycler);
-        adapter = new NewsAdapter(this,finalList);
-        this.setTitle("Search News...");
+        bar = findViewById(R.id.progress_bar);
+        adapter = new NewsAdapter(this, finalList);
         adapter.listener = this;
-       // ((MyApp)getApplication()).dbManager.listener = this;
-       // ((MyApp)getApplication()).dbManager.getDB(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("list", finalList);
+        outState.putString("Str", queryStr);
     }
 
     @Override
@@ -49,30 +65,33 @@ public class MainActivity extends AppCompatActivity implements NetworkingService
         inflater.inflate(R.menu.news_search_menu, menu);
         MenuItem searchViewMenu = menu.findItem(R.id.news_search_view);
 
-        SearchView searchView = (SearchView) searchViewMenu.getActionView();
+        searchView = (SearchView) searchViewMenu.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 finalList.clear();
                 bitmapList.clear();
-                mylist.clear();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 //  Log.d("Donation app change",newText);
+                queryStr = newText;
                 finalList.clear();
                 bitmapList.clear();
-                mylist.clear();
-                if (newText.length() >=3) {
+                if (newText.length() >= 3) {
                     ((MyApp) getApplication()).networkingService.getNewsBySearch(newText);
+                    bar.setVisibility(View.VISIBLE);
+                    searchView.setClickable(false);
+
+                    // bar.startAnimation();
 
                 } else {
-                      adapter.list = new ArrayList<>(0);
-                      adapter.notifyDataSetChanged();
-                     // finalList.clear();
-                     // bitmapList.clear();
+                    adapter.list = new ArrayList<>(0);
+                    adapter.notifyDataSetChanged();
+                    // finalList.clear();
+                    // bitmapList.clear();
                     //mylist.clear();
                 }
 
@@ -86,73 +105,75 @@ public class MainActivity extends AppCompatActivity implements NetworkingService
 
     @Override
     public void gettingJsonIsCompleted(String json) {
-       // Toast.makeText(this, json, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, json, Toast.LENGTH_SHORT).show();
         //get array list of cities from json string
-        mylist = JsonService.fromJsonToNewsList(json);
-        count=finalList.size();
-        finalList=mylist;
+        finalList = JsonService.fromJsonToNewsList(json);
+
+        count = finalList.size();
+        if (count == 0) {
+            bar.setVisibility(View.INVISIBLE);
+
+        }
         adapter.list = finalList;
         adapter.notifyDataSetChanged();
-        for (int i = 0; i < mylist.size(); i++) {
-            ((MyApp) getApplication()).networkingService.gettingImage(mylist.get(i).content_url);
+
+        for (int i = 0; i < finalList.size(); i++) {
+            ((MyApp) getApplication()).networkingService.gettingImage(finalList.get(i).content_url);
 
         }
 
-
-// for (int i = 0; i < bitmapList.size(); i++) {
-        //     finalList.add(new News(mylist.get(i).title,mylist.get(i).link,
-        //             mylist.get(i).photo_url,bitmapList.get(i)));
-        //     Log.e("final: ",finalList.get(i).photo_bitmap.toString());
-        // }
 
     }
 
     @Override
     public void gettingImageIsCompleted(Bitmap bitmap) {
-       // Toast.makeText(this, bitmap.toString(), Toast.LENGTH_SHORT).show();
-        //Log.e("bitmap", image.toString());
 
         bitmapList.add(bitmap);
-       int i=bitmapList.size()-1;
-        News obj=finalList.get(i);
-        obj.setPhoto_bitmap(bitmapList.get(i));
-        finalList.set(i,obj);
+        int i = bitmapList.size() - 1;
+        News obj = finalList.get(i);
+        BitmapConvertor convertor = new BitmapConvertor();
+        obj.bytes = convertor.bitmapToByteArray(bitmap);
+        finalList.set(i, obj);
         adapter.list = finalList;
         adapter.notifyDataSetChanged();
-        //finalList.add(new News(mylist.get(i).name,mylist.get(i).url,
-             //   mylist.get(i).content_url,bitmapList.get(i)));
+        if (bitmapList.size() == count) {
+            bar.setVisibility(View.INVISIBLE);
+            searchView.setClickable(true);
+        }
 
-      //  Toast.makeText(this,"size: "+ bitmapList.size(), Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onClicked(int post) {
+        index = post;
 
-        News obj=finalList.get(post);
-        ((MyApp)getApplication()).selectedNews=obj;
-        Intent intent=new Intent(MainActivity.this,DetailNewsActivity.class);
-     //   intent.putExtra("KEY_NAME", obj);
+        News obj = finalList.get(post);
+        ((MyApp) getApplication()).dbManager.getAllNewsData();
+        ((MyApp) getApplication()).selectedNews = obj;
 
-        startActivity(intent);
-       // showAlert(finalList.get(post));
     }
 
-    private void showAlert(News news) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you want to save for later or open?");
-        builder.setNegativeButton("save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-              //  ((MyApp)getApplication()).dbManager.insertNewCityAsync(city);
-            }
-        });
-        builder.setPositiveButton("open",new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
+    @Override
+    public void insertNewsCompleted() {
 
+    }
+
+    @Override
+    public void gettingNewsCompleted(News[] list) {
+        boolean val = false;
+        for (int i = 0; i < list.length; i++) {
+            if (finalList.get(index).name.equals(list[i].name)) {
+                val = true;
+                break;
             }
-        });
-        builder.create().show();
+        }
+
+        Intent intent = new Intent(MainActivity.this, DetailNewsActivity.class);
+        intent.putExtra("isSaved", val);
+        startActivity(intent);
+
+
     }
 }

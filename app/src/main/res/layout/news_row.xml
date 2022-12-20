@@ -32,7 +32,7 @@
         android:gravity="center_vertical"
         android:text="Russia says reports about Modi refusing Putin meeting are 'misunderstanding' - Interfax"
         android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@id/news_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
