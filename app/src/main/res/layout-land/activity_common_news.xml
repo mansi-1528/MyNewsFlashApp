@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/btn1"
-                android:text="business" />
+                android:text="@string/business" />
 
             <Button
                 android:id="@+id/btn_entertainment"
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
 
                 android:backgroundTint="@color/btn2"
-                android:text="entertainment" />
+                android:text="@string/entertainment" />
 
             <Button
                 android:id="@+id/btn_politics"
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
 
                 android:backgroundTint="@color/btn3"
-                android:text="politics" />
+                android:text="@string/politics" />
 
             <Button
                 android:id="@+id/btn_sports"
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
 
                 android:backgroundTint="@color/btn4"
-                android:text="sports" />
+                android:text="@string/sports" />
 
             <Button
                 android:id="@+id/btn_world"
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
 
                 android:backgroundTint="@color/btn5"
-                android:text="world" />
+                android:text="@string/world" />
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -67,7 +67,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/grey"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/margin_eight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/scroll_view"

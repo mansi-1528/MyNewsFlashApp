@@ -25,18 +25,18 @@
                 android:id="@+id/btn_business"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/margin_five"
                 android:backgroundTint="@color/btn1"
-                android:text="business" />
+                android:text="@string/business" />
 
             <Button
                 android:id="@+id/btn_entertainment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/margin_five"
                 android:backgroundTint="@color/btn2"
-                android:text="entertainment" />
+                android:text="@string/entertainment" />
 
             <Button
                 android:id="@+id/btn_politics"
@@ -45,25 +45,25 @@
 
                 android:layout_margin="5dp"
                 android:backgroundTint="@color/btn3"
-                android:text="politics" />
+                android:text="@string/politics" />
 
             <Button
                 android:id="@+id/btn_sports"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/margin_five"
                 android:backgroundTint="@color/btn4"
-                android:text="sports" />
+                android:text="@string/sports" />
 
             <Button
                 android:id="@+id/btn_world"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/margin_five"
                 android:backgroundTint="@color/btn5"
-                android:text="world" />
+                android:text="@string/world" />
         </LinearLayout>
     </HorizontalScrollView>
 
