@@ -12,13 +12,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class DetailNewsActivity extends AppCompatActivity implements DBManager.DataBaseListener {
+public class DetailNewsActivity extends AppCompatActivity implements DBManager.DataBaseListener, View.OnClickListener {
     News object = new News();
     TextView title, desc;
     ImageView imageView;
@@ -47,8 +48,9 @@ public class DetailNewsActivity extends AppCompatActivity implements DBManager.D
         BitmapConvertor convertor = new BitmapConvertor();
         Bitmap bitmap = convertor.byteArrayToBitmap(object.bytes);
         imageView.setImageBitmap(bitmap);
-
-
+        ImageButton ib = (ImageButton) findViewById(R.id.select_btn_back);
+        ib.setOnClickListener(this);
+        readMore.setOnClickListener(this);
 
         readMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +61,16 @@ public class DetailNewsActivity extends AppCompatActivity implements DBManager.D
         });
 
         //    return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.select_btn_readmore) {
+            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(object.getUrl()));
+            startActivity(myIntent);
+        } else {
+            finish();
+        }
     }
 
     @Override
