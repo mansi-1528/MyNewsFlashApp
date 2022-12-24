@@ -105,7 +105,6 @@ public class DetailNewsActivity extends AppCompatActivity implements DBManager.D
                 return true;
 
             case R.id.share:
-                Toast.makeText(this, "share", Toast.LENGTH_SHORT).show();
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_TEXT, object.getUrl());
