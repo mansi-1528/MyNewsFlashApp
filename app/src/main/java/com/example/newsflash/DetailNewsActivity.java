@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -46,6 +47,7 @@ public class DetailNewsActivity extends AppCompatActivity implements DBManager.D
         desc = findViewById(R.id.select_desc);
         imageView = findViewById(R.id.select_img);
         readMore = findViewById(R.id.select_btn_readmore);
+        desc.setMovementMethod(new ScrollingMovementMethod());
         title.setText(object.name);
         desc.setText(object.description);
         BitmapConvertor convertor = new BitmapConvertor();

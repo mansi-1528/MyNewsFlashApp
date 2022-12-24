@@ -49,6 +49,7 @@
         android:layout_height="0dp"
         android:layout_margin="8dp"
         android:textColor="@color/black"
+        android:scrollbars = "vertical"
         android:textSize="@dimen/text_18"
         app:layout_constraintBottom_toTopOf="@id/select_btn_back"
         app:layout_constraintEnd_toEndOf="parent"

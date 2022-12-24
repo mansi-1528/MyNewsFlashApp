@@ -49,6 +49,7 @@
         android:layout_margin="@dimen/margin_ten"
         android:textColor="@color/black"
         android:textSize="@dimen/text_18"
+        android:scrollbars = "vertical"
         app:layout_constraintBottom_toTopOf="@id/select_btn_readmore"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/select_img"
