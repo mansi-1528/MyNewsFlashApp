@@ -1,8 +1,10 @@
 package com.example.newsflash;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -24,7 +26,7 @@ public class DetailNewsActivity extends AppCompatActivity implements DBManager.D
     TextView title, desc;
     ImageView imageView;
     Button readMore;
-    Boolean isSaved = false;
+    Boolean isSaved = false, isFromFav = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class DetailNewsActivity extends AppCompatActivity implements DBManager.D
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             isSaved = extras.getBoolean("isSaved");
+            isFromFav = extras.getBoolean("isFromFav");
         }
         object = ((MyApp) getApplication()).selectedNews;
         title = findViewById(R.id.select_title);
@@ -86,7 +89,7 @@ public class DetailNewsActivity extends AppCompatActivity implements DBManager.D
         switch (item.getItemId()) {
             case R.id.save:
                 if (isSaved) {
-                    Toast.makeText(this, "Item already added to database..", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "This news is already in library.", Toast.LENGTH_SHORT).show();
                 } else {
                     //Toast.makeText(this, "save", Toast.LENGTH_SHORT).show();
                     item.setIcon(R.drawable.ic_baseline_bookmark_24);
@@ -95,6 +98,10 @@ public class DetailNewsActivity extends AppCompatActivity implements DBManager.D
 
                 }
 
+                return true;
+
+            case R.id.delete:
+                showAlert();
                 return true;
 
             case R.id.share:
@@ -112,19 +119,52 @@ public class DetailNewsActivity extends AppCompatActivity implements DBManager.D
         }
     }
 
+    private void showAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_AlertDialog_AppCompat_customtheme);
+        builder.setMessage("Are you sure you want to delete this news from database?")
+
+                .setTitle("Delete News...");
+        builder.setCancelable(false);
+        builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                ((MyApp) getApplication()).dbManager.deleteNewsAsync(object);
+                finish();
+
+            }
+        });
+        builder.create().show();
+
+    }
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+
         if (isSaved) {
-            //in production you'd probably be better off keeping a reference to the item
             menu.findItem(R.id.save)
                     .setIcon(R.drawable.ic_baseline_bookmark_24)
                     .setTitle("saved");
+            if(isFromFav){
+                menu.findItem(R.id.delete).setVisible(true);
+
+            }else {
+                menu.findItem(R.id.delete).setVisible(false);
+
+            }
         } else {
             menu.findItem(R.id.save)
                     .setIcon(R.drawable.ic_baseline_bookmark_border_24)
                     .setTitle("save");
+            menu.findItem(R.id.delete).setVisible(false);
         }
+
+
+
         return super.onPrepareOptionsMenu(menu);
 
     }
@@ -138,7 +178,13 @@ public class DetailNewsActivity extends AppCompatActivity implements DBManager.D
     @Override
     public void gettingNewsCompleted(News[] list) {
         Toast.makeText(this, "done", Toast.LENGTH_SHORT).show();
-       // finish();
+        // finish();
         isSaved = true;
+    }
+
+    @Override
+    public void deleteNewsCompleted() {
+        Toast.makeText(this, "deleted news from database.", Toast.LENGTH_SHORT).show();
+
     }
 }

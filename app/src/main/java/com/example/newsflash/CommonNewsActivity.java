@@ -21,6 +21,7 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
     RecyclerView recyclerView;
     NewsAdapter adapter;
     int count = -1;
+    String category="business";
     ArrayList<Bitmap> bitmapList = new ArrayList<>();
     ArrayList<News> finalList = new ArrayList<>();
     int index=-1;
@@ -32,7 +33,10 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
         initviews();
         setButtonListeners();
         if (savedInstanceState != null) {
-            finalList = savedInstanceState.getParcelableArrayList("list");
+            category=savedInstanceState.getString("string");
+           // finalList = savedInstanceState.getParcelableArrayList("list");
+           // adapter.list=finalList;
+           // adapter.notifyDataSetChanged();
         }
         ((MyApp) getApplication()).dbManager.listener = this;
         ((MyApp) getApplication()).dbManager.getDB(this);
@@ -41,8 +45,9 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
         adapter = new NewsAdapter(this, finalList);
         adapter.listener = this;
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ((MyApp) getApplication()).networkingService.getNewsByCategory("business");
+      //  recyclerView.setLayoutManager( new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+       recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ((MyApp) getApplication()).networkingService.getNewsByCategory(category);
 
     }
 
@@ -56,7 +61,7 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("list", finalList);
+        outState.putString("string",category);
     }
 
     private void setButtonListeners() {
@@ -105,6 +110,7 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         Button button = (Button) v;
+        category=button.getText().toString();
         finalList.clear();
         bitmapList.clear();
         ((MyApp) getApplication()).networkingService.getNewsByCategory(button.getText().toString());
@@ -174,6 +180,12 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
 
         Intent intent = new Intent(CommonNewsActivity.this, DetailNewsActivity.class);
         intent.putExtra("isSaved", val);
+        intent.putExtra("isFromFav", false);
         startActivity(intent);
+    }
+
+    @Override
+    public void deleteNewsCompleted() {
+
     }
 }

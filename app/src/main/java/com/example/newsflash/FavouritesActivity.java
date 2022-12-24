@@ -26,7 +26,7 @@ public class FavouritesActivity extends AppCompatActivity implements DBManager.D
         recyclerView = findViewById(R.id.favourite_recycler);
         adapter = new NewsAdapter(this, newsList);
 
-        this.setTitle("Favourites...");
+        this.setTitle("Library...");
         adapter.listener = this;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -38,6 +38,8 @@ public class FavouritesActivity extends AppCompatActivity implements DBManager.D
     protected void onResume() {
         super.onResume();
         ((MyApp) getApplication()).dbManager.listener = this;
+        ((MyApp)getApplication()).dbManager.getAllNewsData();
+
 
     }
     @Override
@@ -47,12 +49,17 @@ public class FavouritesActivity extends AppCompatActivity implements DBManager.D
 
     @Override
     public void gettingNewsCompleted(News[] list) {
+        newsList.clear();
         for (int i = 0; i < list.length; i++) {
             newsList.add(i, list[i]);
         }
         adapter.list = newsList;
         adapter.notifyDataSetChanged();
-//newsList=list;
+    }
+
+    @Override
+    public void deleteNewsCompleted() {
+
     }
 
     @Override
@@ -61,6 +68,7 @@ public class FavouritesActivity extends AppCompatActivity implements DBManager.D
         ((MyApp)getApplication()).selectedNews=obj;
         Intent intent=new Intent(FavouritesActivity.this,DetailNewsActivity.class);
         intent.putExtra("isSaved", true);
+        intent.putExtra("isFromFav", true);
 
         startActivity(intent);
     }

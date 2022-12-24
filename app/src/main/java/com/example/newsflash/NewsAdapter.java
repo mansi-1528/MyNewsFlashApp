@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import kotlin.text.Regex;
+
 public class NewsAdapter extends
         RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
@@ -41,7 +43,10 @@ public class NewsAdapter extends
 
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
-        holder.newsTitle.setText(list.get(position).name);
+      //  holder.newsTitle.setText(list.get(position).name);
+        String str=list.get(position).name;
+      str=str.replaceAll("[\\u2018\\u2019\\u201B\\u201F\\u201D\\u201C\\u275C\\u275B\\u275D\\u275E\\u275F]", "\"");
+        holder.newsTitle.setText(str);
         if(list.get(position).bytes!=null){
             BitmapConvertor convertor=new BitmapConvertor();
             Bitmap bitmap=convertor.byteArrayToBitmap(list.get(position).bytes);

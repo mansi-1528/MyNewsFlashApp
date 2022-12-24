@@ -11,18 +11,20 @@ public class DBManager {
     interface DataBaseListener{
         void insertNewsCompleted();
         void gettingNewsCompleted(News[] list);
+        void deleteNewsCompleted();
+
     }
 
     DataBaseListener listener;
 
-    NewsDatabase cityDB;
+    NewsDatabase newsDatabase;
     Handler dbHandler = new Handler(Looper.getMainLooper());
 
     NewsDatabase getDB(Context context){
-        if (cityDB == null)
-            cityDB = Room.databaseBuilder(context,NewsDatabase.class,"city_db").build();
+        if (newsDatabase == null)
+            newsDatabase = Room.databaseBuilder(context,NewsDatabase.class,"db").build();
 
-        return cityDB;
+        return newsDatabase;
     }
 
     void insertNewsAsync(News t){
@@ -30,7 +32,7 @@ public class DBManager {
         MyApp.executorService.execute(new Runnable() {
             @Override
             public void run() {
-                cityDB.getDao().addNewsToReadLater(t);
+                newsDatabase.getDao().addNewsToReadLater(t);
                 dbHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -46,12 +48,28 @@ public class DBManager {
         MyApp.executorService.execute(new Runnable() {
             @Override
             public void run() {
-                News[] list = cityDB.getDao().getAllNews();
+                News[] list = newsDatabase.getDao().getAllNews();
                 dbHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         // notify main thread
                         listener.gettingNewsCompleted(list);
+                    }
+                });
+            }
+        });
+    }
+    void deleteNewsAsync(News t){
+
+        MyApp.executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                newsDatabase.getDao().deleteNews(t);
+                dbHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // notify main thread
+                        listener.deleteNewsCompleted();
                     }
                 });
             }

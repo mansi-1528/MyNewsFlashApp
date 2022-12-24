@@ -189,8 +189,14 @@ public class MainActivity extends AppCompatActivity implements NetworkingService
 
         Intent intent = new Intent(MainActivity.this, DetailNewsActivity.class);
         intent.putExtra("isSaved", val);
+        intent.putExtra("isFromFav", false);
         startActivity(intent);
 
+
+    }
+
+    @Override
+    public void deleteNewsCompleted() {
 
     }
 }

@@ -26,6 +26,7 @@
         </activity>
         <activity
             android:name=".FavouritesActivity"
+            android:screenOrientation="fullSensor"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

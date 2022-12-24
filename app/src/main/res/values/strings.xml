@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">NewsFlash</string>
     <string name="search_news_by_name">search news by name</string>
-    <string name="saved_news">Saved News</string>
-    <string name="search_for_news">Search for News</string>
+    <string name="saved_news">Library</string>
+    <string name="search_for_news">Search</string>
     <string name="save">save</string>
     <string name="share">Share</string>
     <string name="demo_text">Russia says reports about Modi refusing Putin meeting are \'misunderstanding\' - Interfax</string>

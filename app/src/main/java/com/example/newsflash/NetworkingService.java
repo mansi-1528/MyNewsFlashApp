@@ -26,35 +26,26 @@ public class NetworkingService {
 
     Handler handler = new Handler(Looper.getMainLooper());
 
-    String cityURLString = "http://gd.geobytes.com/AutoCompleteCity?&q=";
-    String iconURL1 = "http://openweathermap.org/img/wn/";
-    String iconURL2 = "@2x.png";
 
-  //  private static final String KEY = "247de6380dmshdc2ed41afb51592p1962d8jsnd216291fc12c";
     private static final String SDK = "true";
-    private static final String KEY = "247de6380dmshdc2ed41afb51592p1962d8jsnd216291fc12c";
+    private static final String KEY = "cbf122fc58msh213c508c550252ep125019jsn994532cd1009";
     private static final String HOST_NEWS = "bing-news-search1.p.rapidapi.com";
 
-    //String searchURL1 = "https://real-time-news-data.p.rapidapi.com/search?query=";
     String searchURL1 ="https://bing-news-search1.p.rapidapi.com/news/search?q=";
     String searchURL2 = "&freshness=Day&textFormat=Raw&safeSearch=Off";
+    String cUrl1="https://bing-news-search1.p.rapidapi.com/news?category=";
+    String cUrl2="&safeSearch=Off&textFormat=Raw";
 
     void getNewsBySearch(String query) {
-        //String str = cityURLString + query;
         String str = searchURL1 + query + searchURL2;
         connectToNews(str);
     }
+
     void getNewsByCategory(String category) {
-        //String str = cityURLString + query;
-        String cUrl1="https://bing-news-search1.p.rapidapi.com/news?category=";
-        String cUrl2="&safeSearch=Off&textFormat=Raw";
         String str = cUrl1 + category + cUrl2;
         connectToNews(str);
     }
-    // void getWeatherInSelectedCity(City c){
-    //    String fullString = weatherURL1 + c.city +","+c.country + weatherURL2;
-    //    connect(fullString);
-    //}
+
 
 
     void connectToNews(String urlString) {
