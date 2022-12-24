@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +17,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-public class CommonNewsActivity extends AppCompatActivity implements View.OnClickListener, NetworkingService.NetworkingListener, NewsAdapter.ItemListener, DBManager.DataBaseListener {
+public class CommonNewsActivity extends AppCompatActivity implements View.OnClickListener, NetworkingService.NetworkingListener, NewsAdapter.ItemListener, DBManager.DataBaseListener, View.OnFocusChangeListener {
     Button business, entertainment, politics, sports, world;
     RecyclerView recyclerView;
     NewsAdapter adapter;
@@ -34,9 +35,14 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
         setButtonListeners();
         if (savedInstanceState != null) {
             category=savedInstanceState.getString("string");
-           // finalList = savedInstanceState.getParcelableArrayList("list");
-           // adapter.list=finalList;
-           // adapter.notifyDataSetChanged();
+            checkIsButtonClicked(business);
+            checkIsButtonClicked(entertainment);
+            checkIsButtonClicked(politics);
+            checkIsButtonClicked(sports);
+            checkIsButtonClicked(world);
+        }else {
+            setDifferentView(business);
+
         }
         ((MyApp) getApplication()).dbManager.listener = this;
         ((MyApp) getApplication()).dbManager.getDB(this);
@@ -49,6 +55,11 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ((MyApp) getApplication()).networkingService.getNewsByCategory(category);
 
+    }
+    private void checkIsButtonClicked(Button button) {
+        if(button.getText().toString().equals(category)){
+            setDifferentView(button);
+        }
     }
 
     @Override
@@ -79,7 +90,16 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
         sports = findViewById(R.id.btn_sports);
         world = findViewById(R.id.btn_world);
     }
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        Button button=(Button)v;
 
+        if (hasFocus) {
+            button.setTextColor(getResources().getColor(R.color.black));
+        } else {
+            button.setTextColor(getResources().getColor(R.color.white));
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -109,12 +129,27 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
+        setDefaultButtonViews();
         Button button = (Button) v;
         category=button.getText().toString();
         finalList.clear();
         bitmapList.clear();
+        setDifferentView(button);
         ((MyApp) getApplication()).networkingService.getNewsByCategory(button.getText().toString());
 
+    }
+
+    private void setDifferentView(Button button) {
+        button.setTextColor(getResources().getColor(R.color.white));
+
+    }
+
+    private void setDefaultButtonViews() {
+        business.setTextColor(getResources().getColor(R.color.black));
+        entertainment.setTextColor(getResources().getColor(R.color.black));
+        politics.setTextColor(getResources().getColor(R.color.black));
+        sports.setTextColor(getResources().getColor(R.color.black));
+        world.setTextColor(getResources().getColor(R.color.black));
     }
 
     @Override
@@ -188,4 +223,6 @@ public class CommonNewsActivity extends AppCompatActivity implements View.OnClic
     public void deleteNewsCompleted() {
 
     }
+
+
 }

@@ -24,6 +24,8 @@
                 android:id="@+id/btn_business"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
+
                 android:backgroundTint="@color/btn1"
                 android:text="@string/business" />
 
@@ -31,6 +33,7 @@
                 android:id="@+id/btn_entertainment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
 
                 android:backgroundTint="@color/btn2"
                 android:text="@string/entertainment" />
@@ -39,6 +42,7 @@
                 android:id="@+id/btn_politics"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
 
                 android:backgroundTint="@color/btn3"
                 android:text="@string/politics" />
@@ -47,6 +51,7 @@
                 android:id="@+id/btn_sports"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
 
                 android:backgroundTint="@color/btn4"
                 android:text="@string/sports" />
@@ -55,6 +60,7 @@
                 android:id="@+id/btn_world"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
 
                 android:backgroundTint="@color/btn5"
                 android:text="@string/world" />
